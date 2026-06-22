@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Editing Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app">
+        <header>
+            <h1>🎬 Video Editing Tracker</h1>
+            <p class="subtitle">Track your video projects from footage to final cut</p>
+            <div class="stats-bar" id="statsBar"></div>
+        </header>
+
+        <main>
+            <div class="controls">
+                <button class="btn btn-primary" id="addProjectBtn">+ New Project</button>
+                <div class="filters">
+                    <select id="filterStatus">
+                        <option value="all">All Statuses</option>
+                        <option value="Footage Received">Footage Received</option>
+                        <option value="In Editing">In Editing</option>
+                        <option value="Review">Review</option>
+                        <option value="Revisions">Revisions</option>
+                        <option value="Final Render">Final Render</option>
+                        <option value="Delivered">Delivered</option>
+                    </select>
+                    <select id="filterPriority">
+                        <option value="all">All Priorities</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                    <select id="sortBy">
+                        <option value="deadline">Sort by Deadline</option>
+                        <option value="created">Sort by Created</option>
+                        <option value="priority">Sort by Priority</option>
+                        <option value="progress">Sort by Progress</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="projects-grid" id="projectsGrid"></div>
+            <div class="empty-state" id="emptyState" style="display:none;">
+                <p>No projects yet. Click <strong>+ New Project</strong> to get started.</p>
+            </div>
+        </main>
+
+        <!-- Modal -->
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2 id="modalTitle">New Project</h2>
+                    <button class="modal-close" id="modalClose">&times;</button>
+                </div>
+                <form id="projectForm">
+                    <input type="hidden" id="projectId">
+                    <div class="form-group">
+                        <label for="projectName">Project Name</label>
+                        <input type="text" id="projectName" required placeholder="e.g. Brand Launch Video">
+                    </div>
+                    <div class="form-group">
+                        <label for="clientName">Client</label>
+                        <input type="text" id="clientName" placeholder="e.g. Acme Corp">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="videoType">Video Type</label>
+                            <select id="videoType">
+                                <option value="Commercial">Commercial</option>
+                                <option value="Social Media">Social Media</option>
+                                <option value="YouTube">YouTube</option>
+                                <option value="Documentary">Documentary</option>
+                                <option value="Music Video">Music Video</option>
+                                <option value="Corporate">Corporate</option>
+                                <option value="Wedding">Wedding</option>
+                                <option value="Short Film">Short Film</option>
+                                <option value="Tutorial">Tutorial</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="duration">Duration (min)</label>
+                            <input type="number" id="duration" min="0" step="0.5" placeholder="e.g. 5">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select id="status">
+                                <option value="Footage Received">Footage Received</option>
+                                <option value="In Editing">In Editing</option>
+                                <option value="Review">Review</option>
+                                <option value="Revisions">Revisions</option>
+                                <option value="Final Render">Final Render</option>
+                                <option value="Delivered">Delivered</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="priority">Priority</label>
+                            <select id="priority">
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                                <option value="Low">Low</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="deadline">Deadline</label>
+                            <input type="date" id="deadline">
+                        </div>
+                        <div class="form-group">
+                            <label for="progress">Progress: <span id="progressValue">0</span>%</label>
+                            <input type="range" id="progress" min="0" max="100" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Editing Checklist</label>
+                        <div class="checklist" id="checklist">
+                            <label class="check-item"><input type="checkbox" data-task="import"> Import & Organize Footage</label>
+                            <label class="check-item"><input type="checkbox" data-task="rough"> Rough Cut</label>
+                            <label class="check-item"><input type="checkbox" data-task="audio"> Audio Editing / Music</label>
+                            <label class="check-item"><input type="checkbox" data-task="color"> Color Grading</label>
+                            <label class="check-item"><input type="checkbox" data-task="vfx"> VFX / Motion Graphics</label>
+                            <label class="check-item"><input type="checkbox" data-task="titles"> Titles & Lower Thirds</label>
+                            <label class="check-item"><input type="checkbox" data-task="sound"> Sound Design & Mix</label>
+                            <label class="check-item"><input type="checkbox" data-task="export"> Final Export</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="notes">Notes</label>
+                        <textarea id="notes" rows="3" placeholder="Additional notes..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-danger" id="deleteBtn" style="display:none;">Delete</button>
+                        <div class="form-actions-right">
+                            <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Project</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
